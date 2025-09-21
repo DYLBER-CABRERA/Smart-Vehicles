@@ -1,6 +1,8 @@
 package org.example.models;
 
-public class Combustion_Vehicle extends Vehicle implements Drivable{
+import org.example.interfaces.Drivable;
+
+public class Combustion_Vehicle extends Vehicle implements Drivable {
     private double tank_capacity;
     private double fuel_level = 100.0;
 
@@ -17,7 +19,7 @@ public class Combustion_Vehicle extends Vehicle implements Drivable{
     }
 
     @Override
-    public String to_drive() {
+    public String toDrive() {
         if (fuel_level > 0) {
             fuel_level -= 5; // Simular consumo
             return String.format("Conduciendo %s %s con motor de combustión\nNivel de combustible: %.1f%%",

@@ -38,4 +38,4 @@ public class VehicleInfo {
                 id, brand, model, year, maximumSpeed, type, specificInfo, capabilities);
     }
 }
-}
+
