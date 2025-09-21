@@ -7,15 +7,15 @@ public abstract class Vehicle {
     protected int year;
     protected int maximum_speed;
 
-// constructor
+    // constructor
 // Constructor
-public Vehicle(String id, String brand, String model, int year, int maximum_speed) {
-    this.id = id;
-    this.brand = brand;
-    this.model = model;
-    this.year = year;
-    this.maximum_speed = maximum_speed;
-}
+    public Vehicle(String id, String brand, String model, int year, int maximum_speed) {
+        this.id = id;
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.maximum_speed = maximum_speed;
+    }
 
     // Métodos públicos
     public void accelerate() {
