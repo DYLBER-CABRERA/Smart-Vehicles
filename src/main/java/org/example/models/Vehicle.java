@@ -26,15 +26,7 @@ public abstract class Vehicle {
         System.out.println(brand + " " + model + " está frenando...");
     }
 
-    public Object display_general_information() {
-        System.out.println("=== INFORMACIÓN GENERAL ===");
-        System.out.println("ID: " + id);
-        System.out.println("Marca: " + brand);
-        System.out.println("Modelo: " + model);
-        System.out.println("Año: " + year);
-        System.out.println("Velocidad Máxima: " + maximum_speed + " km/h");
-        return null; // Retorna Object como indica el diagrama
-    }
+    public abstract VehicleInfo display_general_information();
 
     // Getters
     public String getId() { return id; }
