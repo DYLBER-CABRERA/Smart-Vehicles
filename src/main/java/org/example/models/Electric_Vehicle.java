@@ -2,7 +2,7 @@ package org.example.models;
 import org.example.interfaces.Autonomous_Advanced;
 
 
-class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
+public class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
     private double battery_capacity;
     private double current_charge = 100.0;
     private boolean emergency_mode = false;
