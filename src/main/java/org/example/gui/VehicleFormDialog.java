@@ -1,6 +1,8 @@
 package org.example.gui;
 
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.example.models.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -12,7 +14,7 @@ import java.util.Optional;
 public class VehicleFormDialog extends Dialog<Vehicle> {
     private String vehicleType;
     private TextField idField;
-    private TextField brandField;
+    private ComboBox<String> brandComboBox;
     private TextField modelField;
     private Spinner<Integer> yearSpinner;
     private Spinner<Integer> speedSpinner;
@@ -49,8 +51,12 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
         idField = new TextField();
         idField.setPromptText("Ej: EV001, HV001, CV001");
 
-        brandField = new TextField();
-        brandField.setPromptText("Ej: Tesla, Toyota, Ford");
+        ObservableList<String> marcas = FXCollections.observableArrayList(
+                "Tesla", "Nissan", "Toyota", "Honda", "Ford", "Chevrolet", "BMW", "Audi", "Mercedes-Benz", "Volkswagen", "Hyundai", "Kia", "Mazda", "Subaru", "Jeep"
+        );
+        brandComboBox = new ComboBox<>(marcas);
+        brandComboBox.setPromptText("Seleccione una marca");
+        brandComboBox.setEditable(true);
 
         modelField = new TextField();
         modelField.setPromptText("Ej: Model S, Prius, Mustang");
@@ -73,7 +79,7 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
         grid.add(idField, 1, 0);
 
         grid.add(new Label("Marca:"), 0, 1);
-        grid.add(brandField, 1, 1);
+        grid.add(brandComboBox, 1, 1);
 
         grid.add(new Label("Modelo:"), 0, 2);
         grid.add(modelField, 1, 2);
@@ -121,7 +127,8 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
         // Validación en tiempo real
         createButton.disableProperty().bind(
                 idField.textProperty().isEmpty()
-                        .or(brandField.textProperty().isEmpty())
+                        .or(brandComboBox.valueProperty().isNull()
+                                .or(brandComboBox.getEditor().textProperty().isEmpty()))
                         .or(modelField.textProperty().isEmpty())
                         .or(specificField.textProperty().isEmpty())
         );
@@ -145,7 +152,9 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
     private Vehicle createVehicle() {
         try {
             String id = idField.getText().trim();
-            String brand = brandField.getText().trim();
+            String brand = brandComboBox.getValue() != null ?
+                    brandComboBox.getValue() :
+                    brandComboBox.getEditor().getText().trim();
             String model = modelField.getText().trim();
             int year = yearSpinner.getValue();
             int maxSpeed = speedSpinner.getValue();
