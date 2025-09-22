@@ -1,0 +1,242 @@
+/* SmartDrive System Styles */
+
+.main-container {
+    -fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    -fx-padding: 15;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10 0 20 0;
+    -fx-alignment: center;
+}
+
+.panel-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+    -fx-padding: 0 0 10 0;
+}
+
+.panel {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.toolbar {
+    -fx-background-color: #343a40;
+    -fx-background-radius: 5;
+    -fx-spacing: 10;
+}
+
+.electric-btn {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.electric-btn:hover {
+    -fx-background-color: #218838;
+}
+
+.hybrid-btn {
+    -fx-background-color: #fd7e14;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.hybrid-btn:hover {
+    -fx-background-color: #e66910;
+}
+
+.combustion-btn {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.combustion-btn:hover {
+    -fx-background-color: #c82333;
+}
+
+.remove-btn {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.remove-btn:hover {
+    -fx-background-color: #5a6268;
+}
+
+.action-btn {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 12;
+    -fx-pref-width: 100;
+}
+
+.action-btn:hover {
+    -fx-background-color: #0056b3;
+}
+
+.autopilot-btn {
+    -fx-background-color: #6f42c1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 90;
+}
+
+.autopilot-btn:hover {
+    -fx-background-color: #59359a;
+}
+
+.emergency-btn {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 90;
+    -fx-effect: dropshadow(three-pass-box, rgba(220,53,69,0.4), 3, 0, 0, 1);
+}
+
+.emergency-btn:hover {
+    -fx-background-color: #c82333;
+}
+
+.charge-btn {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 90;
+}
+
+.charge-btn:hover {
+    -fx-background-color: #218838;
+}
+
+.fuel-btn {
+    -fx-background-color: #fd7e14;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 90;
+}
+
+.fuel-btn:hover {
+    -fx-background-color: #e66910;
+}
+
+.mode-btn {
+    -fx-background-color: #20c997;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 90;
+}
+
+.mode-btn:hover {
+    -fx-background-color: #1ba085;
+}
+
+.vehicle-table {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.vehicle-table .column-header {
+    -fx-background-color: #495057;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.vehicle-table:focused .table-row-cell:filled:selected {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.vehicle-table .table-row-cell:filled:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.result-area {
+    -fx-background-color: #212529;
+    -fx-text-fill: #f8f9fa;
+    -fx-font-family: 'Courier New', monospace;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5;
+    -fx-border-color: #495057;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.stat-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+    -fx-font-size: 12px;
+}
+
+.stat-value {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #007bff;
+}
+
+.stat-value-electric {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #28a745;
+}
+
+.stat-value-hybrid {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #fd7e14;
+}
+
+.stat-value-combustion {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #dc3545;
+}
+
+/* Dialog Styles */
+.dialog-pane {
+    -fx-background-color: white;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #f8f9fa;
+}
+
+.dialog-pane .button {
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
