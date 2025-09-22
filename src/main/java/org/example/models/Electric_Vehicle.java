@@ -1,6 +1,6 @@
 package org.example.models;
 import org.example.interfaces.Autonomous_Advanced;
-import org.example.models.Vehicle;
+
 
 class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
     private double battery_capacity;
@@ -31,13 +31,7 @@ class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
     }
 
     @Override
-    public String autopilot() {
-        return String.format("Piloto automático avanzado activado en %s %s\nSensores eléctricos de alta precisión: OPERATIVOS\nSistemas de navegación autónoma: ACTIVOS",
-                getBrand(), getModel());
-    }
-
-    @Override
-    public String emergency_assistance() {
+    public String emergencyAssistance() {
         emergency_mode = true;
         return String.format("🚨 SISTEMA DE EMERGENCIA ACTIVADO 🚨\nVehículo: %s %s\n" +
                         "✓ Frenado automático de emergencia\n" +
