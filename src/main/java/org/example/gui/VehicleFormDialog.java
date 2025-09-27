@@ -19,18 +19,50 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
     private Spinner<Integer> yearSpinner;
     private Spinner<Integer> speedSpinner;
     private TextField specificField; // Para capacidad batería, eficiencia o capacidad tanque
+    private boolean isEditMode = false;
 
     public VehicleFormDialog(String vehicleType) {
         this.vehicleType = vehicleType;
+        this.isEditMode = false;
         initDialog();
         createForm();
         setupButtons();
         setupResultConverter();
     }
 
+    // En VehicleFormDialog.java
+    public VehicleFormDialog(String vehicleType, Vehicle vehicle) {
+        this.vehicleType = vehicleType;
+        this.isEditMode = true;
+        initDialog();
+        createForm();
+        // Rellenar los campos con los datos del vehículo existente
+        idField.setText(vehicle.getId());
+        brandComboBox.setValue(vehicle.getBrand());
+        modelField.setText(vehicle.getModel());
+        yearSpinner.getValueFactory().setValue(vehicle.getYear());
+        speedSpinner.getValueFactory().setValue(vehicle.getMaximum_speed());
+        // Campo específico según tipo
+        if (vehicle instanceof Electric_Vehicle) {
+            specificField.setText(String.valueOf(((Electric_Vehicle) vehicle).getBattery_capacity()));
+        } else if (vehicle instanceof Hybrid_Vehicle) {
+            specificField.setText(String.valueOf(((Hybrid_Vehicle) vehicle).getEnergy_efficiency()));
+        } else if (vehicle instanceof Combustion_Vehicle) {
+            specificField.setText(String.valueOf(((Combustion_Vehicle) vehicle).getTank_capacity()));
+        }
+        idField.setDisable(true); // Opcional: evitar cambiar el ID
+        setupButtons(); // Llamar aquí, después de deshabilitar el campo
+        setupResultConverter();
+    }
+
     private void initDialog() {
-        setTitle("Agregar " + getVehicleTypeName());
-        setHeaderText("Complete los datos del nuevo vehículo " + vehicleType.toLowerCase());
+        if (isEditMode) {
+            setTitle("Actualizar " + getVehicleTypeName());
+            setHeaderText("Edite los datos del vehículo " + vehicleType.toLowerCase());
+        } else {
+            setTitle("Agregar " + getVehicleTypeName());
+            setHeaderText("Complete los datos del nuevo vehículo " + vehicleType.toLowerCase());
+        }
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
@@ -40,6 +72,7 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
             setGraphic(new Label(icon));
         }
     }
+
 
     private void createForm() {
         GridPane grid = new GridPane();
@@ -118,14 +151,15 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
     }
 
     private void setupButtons() {
-        ButtonType createButtonType = new ButtonType("Crear Vehículo", ButtonBar.ButtonData.OK_DONE);
-        getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+        // Determina el texto del botón según si es edición o creación
+        String buttonText = (idField != null && idField.isDisabled()) ? "Actualizar Vehículo" : "Crear Vehículo";
+        ButtonType mainButtonType = new ButtonType(buttonText, ButtonBar.ButtonData.OK_DONE);
+        getDialogPane().getButtonTypes().setAll(mainButtonType, ButtonType.CANCEL);
 
-        Button createButton = (Button) getDialogPane().lookupButton(createButtonType);
-        createButton.setDefaultButton(true);
+        Button mainButton = (Button) getDialogPane().lookupButton(mainButtonType);
+        mainButton.setDefaultButton(true);
 
-        // Validación en tiempo real
-        createButton.disableProperty().bind(
+        mainButton.disableProperty().bind(
                 idField.textProperty().isEmpty()
                         .or(brandComboBox.valueProperty().isNull()
                                 .or(brandComboBox.getEditor().textProperty().isEmpty()))
@@ -133,9 +167,7 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
                         .or(specificField.textProperty().isEmpty())
         );
 
-        // Estilos para los botones
-        createButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
-
+        mainButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
         Button cancelButton = (Button) getDialogPane().lookupButton(ButtonType.CANCEL);
         cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
     }

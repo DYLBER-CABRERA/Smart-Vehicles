@@ -25,13 +25,22 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Inicializar el gestor de flota
+        // Suprimir todas las advertencias de CSS de JavaFX
+        java.util.logging.Logger cssLogger = java.util.logging.Logger.getLogger("javafx.scene.CssStyleHelper");
+        cssLogger.setLevel(java.util.logging.Level.OFF);
+
+// También suprimir advertencias relacionadas
+        java.util.logging.Logger.getLogger("javafx.css").setLevel(java.util.logging.Level.OFF);
+        java.util.logging.Logger.getLogger("com.sun.javafx.css").setLevel(java.util.logging.Level.OFF);
         fleetManager = new FleetManager();
         vehicleData = FXCollections.observableArrayList();
 
         // Configurar la ventana principal
         primaryStage.setTitle("SmartDrive - Sistema de Gestión de Vehículos Inteligentes");
-        primaryStage.setMinWidth(1000);
-        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(720);
+        primaryStage.setWidth(1280);
+        primaryStage.setHeight(720);
 
         // Crear la interfaz
         VBox root = createMainLayout();
@@ -41,16 +50,24 @@ public class MainWindow extends Application {
 
         Scene scene = new Scene(root, 1200, 800);
 
+        // Código de diagnóstico - agregar antes de cargar el CSS
+        System.out.println("Intentando cargar CSS desde: " + getClass().getResource("/"));
+        System.out.println("Recursos disponibles:");
+
         try {
-            String cssPath = getClass().getResource("/org/example/resources/styles.css").toExternalForm();
-            scene.getStylesheets().add(cssPath);
-            System.out.println("CSS cargado correctamente");
+            java.net.URL cssUrl = getClass().getResource("/styles.css");
+            if (cssUrl != null) {
+                scene.getStylesheets().add(cssUrl.toExternalForm());
+                System.out.println("CSS cargado correctamente");
+            } else {
+                System.out.println("Warning: No se encontró styles.css");
+            }
         } catch (Exception e) {
-            System.out.println("Warning: No se pudo cargar styles.css - " + e.getMessage());
+            System.out.println("Warning: Error cargando CSS - " + e.getMessage());
         }
 
-
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true); // Maximiza la ventana al iniciar
         primaryStage.show();
     }
 
@@ -82,6 +99,7 @@ public class MainWindow extends Application {
         // Área de resultados
         VBox resultPanel = createResultPanel();
 
+
         root.getChildren().addAll(titleLabel, toolbar, mainContent, resultPanel);
         VBox.setVgrow(mainContent, Priority.ALWAYS);
 
@@ -106,16 +124,21 @@ public class MainWindow extends Application {
         addCombustionBtn.getStyleClass().add("combustion-btn");
         addCombustionBtn.setOnAction(e -> openVehicleDialog("Combustion"));
 
+        Button UpdateBtn = new Button("🔄 Actualizar vehiculo");
+        UpdateBtn.getStyleClass().add("update-btn");
+        UpdateBtn.setOnAction(e -> UpdateVehicle());
+
         Button removeBtn = new Button("🗑️ Eliminar");
         removeBtn.getStyleClass().add("remove-btn");
         removeBtn.setOnAction(e -> removeSelectedVehicle());
 
-        Button clearBtn = new Button("🧹 Limpiar Resultados");
+        Button clearBtn = new Button("Limpiar Resultados");
+        clearBtn.getStyleClass().add("clear-btn");
         clearBtn.setOnAction(e -> resultArea.clear());
 
         toolbar.getChildren().addAll(
                 addElectricBtn, addHybridBtn, addCombustionBtn,
-                new Separator(), removeBtn, new Separator(), clearBtn
+                new Separator(), removeBtn, UpdateBtn, new Separator(), clearBtn
         );
 
         return toolbar;
@@ -201,7 +224,7 @@ public class MainWindow extends Application {
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER);
 
-        Button driveBtn = new Button("🚗 Conducir");
+        Button driveBtn = new Button("🚗 Iniciar Conducción");
         driveBtn.getStyleClass().add("action-btn");
         driveBtn.setOnAction(e -> performAction("drive"));
 
@@ -213,7 +236,8 @@ public class MainWindow extends Application {
         brakeBtn.getStyleClass().add("action-btn");
         brakeBtn.setOnAction(e -> performAction("brake"));
 
-        actionButtons.getChildren().addAll(driveBtn, accelerateBtn, brakeBtn);
+        actionButtons.getChildren().addAll(driveBtn);
+                //accelerateBtn, brakeBtn);
 
         // Botones específicos según tipo
         HBox specificButtons = new HBox(10);
@@ -239,7 +263,7 @@ public class MainWindow extends Application {
         modeBtn.getStyleClass().add("mode-btn");
         modeBtn.setOnAction(e -> performAction("mode"));
 
-        specificButtons.getChildren().addAll(autopilotBtn, emergencyBtn, chargeBtn, fuelBtn, modeBtn);
+        //specificButtons.getChildren().addAll(autopilotBtn, emergencyBtn, chargeBtn, fuelBtn, modeBtn);
 
         panel.getChildren().addAll(titleLabel, actionButtons, specificButtons);
 
@@ -249,14 +273,15 @@ public class MainWindow extends Application {
     private VBox createResultPanel() {
         VBox panel = new VBox(5);
         panel.getStyleClass().add("panel");
-        panel.setPrefHeight(200);
+        panel.setPrefHeight(250); // Cambiar de 200 a 250 o más
+        panel.setMinHeight(200);  // Agregar altura mínima
 
         Label titleLabel = new Label("📋 Resultados de Acciones");
         titleLabel.getStyleClass().add("panel-title");
 
         resultArea = new TextArea();
         resultArea.setEditable(false);
-        resultArea.setPrefRowCount(8);
+        resultArea.setPrefRowCount(10);
         resultArea.getStyleClass().add("result-area");
 
         ScrollPane scrollPane = new ScrollPane(resultArea);
@@ -276,6 +301,31 @@ public class MainWindow extends Application {
             refreshStatistics();
             appendToResults("✅ Vehículo agregado: " + vehicle.getBrand() + " " + vehicle.getModel());
         });
+    }
+
+
+    // En MainWindow.java
+    private void UpdateVehicle() {
+        VehicleInfo selected = vehicleTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            Vehicle vehicle = fleetManager.getVehicleById(selected.getId());
+            if (vehicle != null) {
+                String type = "";
+                if (vehicle instanceof Electric_Vehicle) type = "Electric";
+                else if (vehicle instanceof Hybrid_Vehicle) type = "Hybrid";
+                else if (vehicle instanceof Combustion_Vehicle) type = "Combustion";
+
+                VehicleFormDialog dialog = new VehicleFormDialog(type, vehicle);
+                dialog.showAndWait().ifPresent(updatedVehicle -> {
+                    fleetManager.updateVehicle(selected.getId(), updatedVehicle);
+                    refreshVehicleList();
+                    refreshStatistics();
+                    appendToResults("✅ Vehículo actualizado: " + updatedVehicle.getBrand() + " " + updatedVehicle.getModel());
+                });
+            }
+        } else {
+            appendToResults("⚠️ Seleccione un vehículo para actualizar");
+        }
     }
 
     private void removeSelectedVehicle() {
@@ -315,11 +365,14 @@ public class MainWindow extends Application {
             switch (action) {
                 case "drive":
                     if (vehicle instanceof Drivable) {
-                        result = ((Drivable) vehicle).toDrive();
-                    } else {
+                        DriveSimulationDialog simDialog = new DriveSimulationDialog(vehicle);
+                        simDialog.showAndWait();
+                        result = "🚗 Simulación de conducción finalizada para " + vehicle.getBrand() + " " + vehicle.getModel();
+                    } else{
                         result = "❌ Este vehículo no puede conducir";
                     }
                     break;
+
                 case "accelerate":
                     vehicle.accelerate();
                     result = "⚡ " + vehicle.getBrand() + " " + vehicle.getModel() + " está acelerando...";
@@ -419,6 +472,7 @@ public class MainWindow extends Application {
     }
 
     public static void main(String[] args) {
+        java.util.logging.Logger.getGlobal().setLevel(java.util.logging.Level.SEVERE);
         launch(args);
     }
 }

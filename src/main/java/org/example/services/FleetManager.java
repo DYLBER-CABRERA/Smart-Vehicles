@@ -39,6 +39,15 @@ public class FleetManager {
         return vehicles.remove(vehicleId) != null;
     }
 
+    public Vehicle updateVehicle(String vehicleId, Vehicle updatedVehicle) {
+        if (vehicleId == null || updatedVehicle == null || !vehicles.containsKey(vehicleId)) {
+            return null;
+        }
+
+        vehicles.put(vehicleId, updatedVehicle);
+        return updatedVehicle;
+    }
+
     /**
      * Obtiene un vehículo por su ID
      */
