@@ -53,15 +53,10 @@ public class MainWindow extends Application {
         // Código de diagnóstico - agregar antes de cargar el CSS
         System.out.println("Intentando cargar CSS desde: " + getClass().getResource("/"));
         System.out.println("Recursos disponibles:");
-
         try {
-            java.net.URL cssUrl = getClass().getResource("/styles.css");
-            if (cssUrl != null) {
-                scene.getStylesheets().add(cssUrl.toExternalForm());
-                System.out.println("CSS cargado correctamente");
-            } else {
-                System.out.println("Warning: No se encontró styles.css");
-            }
+            scene.getStylesheets().add(getClass().getResource("/org/example/styles.css").toExternalForm());
+
+            System.out.println("CSS cargado correctamente");
         } catch (Exception e) {
             System.out.println("Warning: Error cargando CSS - " + e.getMessage());
         }
