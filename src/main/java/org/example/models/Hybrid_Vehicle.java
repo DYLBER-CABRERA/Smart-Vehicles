@@ -127,7 +127,7 @@ public class Hybrid_Vehicle extends Vehicle implements Autonomous {
     }
 
 
-
+// Metodo para frenar
     @Override
     public void brake() {
         if (!current_mode.equals("Combustión")) {
@@ -145,6 +145,8 @@ public class Hybrid_Vehicle extends Vehicle implements Autonomous {
         }
     }
 
+    // Método para conducir
+@Override
     public String toDrive() {
         if (battery_level <= 0 && fuel_level <= 0) {
             return String.format("❌ ENERGÍA AGOTADA\n%s %s necesita recarga y/o repostaje",
@@ -199,21 +201,21 @@ public class Hybrid_Vehicle extends Vehicle implements Autonomous {
                 energy_efficiency,
                 auto_switch_message);
     }
-
+// Metodo para repostar
     public String refuel() {
         double fuel_added = tank_capacity - fuel_level;
         fuel_level = tank_capacity;
         return String.format("⛽ Repostaje completado\nCombustible agregado: %.2f L\nTanque lleno: %.1f L",
                 fuel_added, tank_capacity);
     }
-
+// Metodo para recargar batería
     public String chargeBattery() {
         double charge_added = battery_capacity - battery_level;
         battery_level = battery_capacity;
         return String.format("🔋 Carga completada\nEnergía agregada: %.2f kWh\nBatería llena: %.1f kWh",
                 charge_added, battery_capacity);
     }
-
+// Metodo para encender el motor
     public String startEngine() {
         if (engine_running) {
             return "⚠️ El motor ya está encendido.";
@@ -229,7 +231,7 @@ public class Hybrid_Vehicle extends Vehicle implements Autonomous {
                 (battery_level / battery_capacity) * 100,
                 (fuel_level / tank_capacity) * 100);
     }
-
+// Metodo para apagar el motor
     public String stopEngine() {
         if (engine_running) {
             engine_running = false;

@@ -16,11 +16,20 @@ public class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
     private boolean engine_running = false;
 
     public Electric_Vehicle(String id, String brand, String model, int year,
+                            int maximum_speed, double battery_capacity, double initial_charge) {
+        super(id, brand, model, year, maximum_speed);
+        this.battery_capacity = battery_capacity;
+        this.current_charge = Math.max(0, Math.min(battery_capacity, initial_charge)); // Batería llena inicialmente
+    }
+
+    // Constructor original: batería llena por defecto
+    public Electric_Vehicle(String id, String brand, String model, int year,
                             int maximum_speed, double battery_capacity) {
         super(id, brand, model, year, maximum_speed);
         this.battery_capacity = battery_capacity;
-        this.current_charge = battery_capacity; // Batería llena inicialmente
+        this.current_charge = battery_capacity; // batería llena
     }
+
 
     // metodo para cargar la batería
     public String battery_charging() {
@@ -55,22 +64,15 @@ public class Electric_Vehicle extends Vehicle implements Autonomous_Advanced {
     }
 
     // Métodos para encender y apagar el motor
-    public String startEngine() {
-        //si el nivel de combustible es 0, no se puede encender
+    public boolean startEngine() {
         if (engine_running) {
-            return "⚠️ El motor ya está apagado.";
+            return false;
+        } else if (current_charge < 0.1) {
+            return false;
         }
-        else if (current_charge <= 0) {
-            return "🔋 Batería agotada. No se puede encender el motor.";
-        }
-        //si el motor esta apagado
-            engine_running = true; // motor encendido
-            current_charge -= 0.1; // Consumo al encender
-            return String.format("🔥 MOTOR ENCENDIDO\n%s %s listo para conducir\n" +
-                            "Combustible: %.1f%%",
-                    getBrand(), getModel(),
-                    (current_charge / battery_capacity) * 100);
-
+        engine_running = true;
+        current_charge -= 0.1;
+        return true;
     }
 
 
