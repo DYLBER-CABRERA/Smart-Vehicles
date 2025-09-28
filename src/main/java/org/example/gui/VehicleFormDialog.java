@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+
 import java.util.Optional;
 
 public class VehicleFormDialog extends Dialog<Vehicle> {
@@ -221,37 +222,53 @@ public class VehicleFormDialog extends Dialog<Vehicle> {
 
     private String getVehicleTypeName() {
         switch (vehicleType) {
-            case "Electric": return "Vehículo Eléctrico";
-            case "Hybrid": return "Vehículo Híbrido";
-            case "Combustion": return "Vehículo de Combustión";
-            default: return "Vehículo";
+            case "Electric":
+                return "Vehículo Eléctrico";
+            case "Hybrid":
+                return "Vehículo Híbrido";
+            case "Combustion":
+                return "Vehículo de Combustión";
+            default:
+                return "Vehículo";
         }
     }
 
     private String getVehicleIcon() {
         switch (vehicleType) {
-            case "Electric": return "🔋";
-            case "Hybrid": return "🔋⛽";
-            case "Combustion": return "⛽";
-            default: return "🚗";
+            case "Electric":
+                return "🔋";
+            case "Hybrid":
+                return "🔋⛽";
+            case "Combustion":
+                return "⛽";
+            default:
+                return "🚗";
         }
     }
 
     private String getSpecificFieldLabel() {
         switch (vehicleType) {
-            case "Electric": return "Capacidad de Batería (kWh):";
-            case "Hybrid": return "Eficiencia Energética (km/l):";
-            case "Combustion": return "Capacidad del Tanque (L):";
-            default: return "Valor Específico:";
+            case "Electric":
+                return "Capacidad de Batería (kWh):";
+            case "Hybrid":
+                return "Eficiencia Energética (km/l):";
+            case "Combustion":
+                return "Capacidad del Tanque (L):";
+            default:
+                return "Valor Específico:";
         }
     }
 
     private String getSpecificFieldPrompt() {
         switch (vehicleType) {
-            case "Electric": return "Ej: 75.0, 100.0";
-            case "Hybrid": return "Ej: 25.5, 30.2";
-            case "Combustion": return "Ej: 60.0, 80.0";
-            default: return "Ingrese valor";
+            case "Electric":
+                return "Ej: 75.0, 100.0";
+            case "Hybrid":
+                return "Ej: 25.5, 30.2";
+            case "Combustion":
+                return "Ej: 60.0, 80.0";
+            default:
+                return "Ingrese valor";
         }
     }
 

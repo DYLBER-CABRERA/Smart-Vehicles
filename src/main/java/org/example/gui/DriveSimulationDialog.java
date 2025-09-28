@@ -59,7 +59,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
 
     private void createUI() {
         VBox mainContainer = new VBox(15);
-        mainContainer.setPadding(new Insets(20));
+        mainContainer.setPadding(new Insets(8));
         mainContainer.setPrefWidth(600);
 
         // Panel de información del vehículo
@@ -84,22 +84,27 @@ public class DriveSimulationDialog extends Dialog<Void> {
     }
 
     private VBox createInfoPanel() {
+        // creación del panel de información del vehículo
         VBox panel = new VBox(5);
         panel.setStyle("-fx-background-color: #f0f8ff; -fx-border-color: #4169e1; -fx-border-radius: 8; -fx-padding: 10;");
 
         Label titleLabel = new Label("Información del Vehículo");
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
+        // Tipo de vehículo
         String vehicleType = getVehicleTypeString();
         Label typeLabel = new Label("Tipo: " + vehicleType);
         Label maxSpeedLabel = new Label("Velocidad Máxima: " + vehicle.getMaximum_speed() + " km/h");
         Label capabilitiesLabel = new Label("Capacidades: " + getCapabilitiesString());
 
+        // Información específica del vehículo agregada al panel
         panel.getChildren().addAll(titleLabel, typeLabel, maxSpeedLabel, capabilitiesLabel);
         return panel;
     }
 
+    // Panel de indicadores
     private VBox createIndicatorPanel() {
+        // Creación del panel de indicadores
         VBox panel = new VBox(10);
         panel.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-padding: 15;");
 
@@ -168,6 +173,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
     }
 
     private GridPane createControlPanel() {
+        // Creación del panel de controles
         GridPane panel = new GridPane();
         panel.setHgap(10);
         panel.setVgap(10);
@@ -235,6 +241,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         changeModeBtn.setStyle("-fx-background-color: #9c27b0; -fx-text-fill: white;");
         changeModeBtn.setOnAction(e -> changeMode());
 
+        // agregar botones al panel
         panel.add(chargeBtn, 0, 3);
         panel.add(fastChargeBtn, 1, 3);
         panel.add(refuelBtn, 2, 3);
@@ -243,10 +250,11 @@ public class DriveSimulationDialog extends Dialog<Void> {
         return panel;
     }
 
+    // Panel de estado
     private VBox createStatusPanel() {
         VBox panel = new VBox(5);
         panel.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-padding: 10;");
-        panel.setPrefHeight(120);
+        panel.setPrefHeight(180);
 
         Label titleLabel = new Label("Estado de la Simulación");
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
@@ -254,14 +262,16 @@ public class DriveSimulationDialog extends Dialog<Void> {
         statusLabel = new Label("Sistema listo para conducir");
         statusLabel.setWrapText(true);
 
+        // Scroll en la ventana de estado
         ScrollPane scrollPane = new ScrollPane(statusLabel);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(80);
+        scrollPane.setPrefHeight(140);
 
         panel.getChildren().addAll(titleLabel, scrollPane);
         return panel;
     }
 
+    // Habilitar o deshabilitar controles según el tipo de vehículo
     private void updateVehicleSpecificControls() {
         // Habilitar/deshabilitar botones según el tipo de vehículo
         if (!(vehicle instanceof Autonomous)) {
@@ -297,12 +307,14 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
     }
 
+    // Timer para actualizar la simulación cada 2 segundos
     private void setupSimulationTimer() {
         Timeline simulationTimer = new Timeline(new KeyFrame(Duration.seconds(2), e -> updateSimulation()));
         simulationTimer.setCycleCount(Timeline.INDEFINITE);
         simulationTimer.play();
     }
 
+// Lógica de actualización de la simulación
     private void updateSimulation() {
         // Actualizar displays
         updateDisplays();
@@ -404,6 +416,11 @@ public class DriveSimulationDialog extends Dialog<Void> {
             startEngineBtn.setDisable(false);
             startEngineBtn.setVisible(true);
 
+            // Solo se carga la bateria si el motor esta apagado
+            chargeBtn.setDisable(ev.isEngine_running());
+            fastChargeBtn.setDisable(ev.isEngine_running());
+
+
         } else if (vehicle instanceof Hybrid_Vehicle) {
             Hybrid_Vehicle hv = (Hybrid_Vehicle) vehicle;
             double batteryPercent = hv.getBattery_percentage();
@@ -429,6 +446,13 @@ public class DriveSimulationDialog extends Dialog<Void> {
             }
             startEngineBtn.setDisable(false);
             startEngineBtn.setVisible(true);
+
+            // solo se carga y reposta si el motor está apagado
+            chargeBtn.setDisable(hv.isEngine_running());
+            fastChargeBtn.setDisable(hv.isEngine_running());
+            refuelBtn.setDisable(hv.isEngine_running());
+
+
 
         } else if (vehicle instanceof Combustion_Vehicle) {
             Combustion_Vehicle cv = (Combustion_Vehicle) vehicle;
@@ -457,8 +481,13 @@ public class DriveSimulationDialog extends Dialog<Void> {
         // Asegúrate de tener referencias a accelerateBtn y brakeBtn como atributos de la clase
         accelerateBtn.setDisable(!engineOn);
         brakeBtn.setDisable(!engineOn);
+
+        // Solo se reposta si el motor está apagado
+        refuelBtn.setDisable(engineOn);
+
     }
 
+    // Métodos de control de conducción
     private void accelerate() {
         if (currentSpeed < vehicle.getMaximum_speed()) {
             int increment = 15;
@@ -468,6 +497,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
     }
 
+    // Método para frenar
     private void brake() {
         if (currentSpeed > 0) {
             int decrement = 20;
@@ -477,6 +507,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
     }
 
+    // Método para encender o apagar el motor
     private void toggleEngine() {
         String result = "";
         if (vehicle instanceof Combustion_Vehicle) {
@@ -493,7 +524,12 @@ public class DriveSimulationDialog extends Dialog<Void> {
                 result = ev.stopEngine();
                 currentSpeed = 0;
             } else {
-                result = ev.startEngine();
+                boolean started = ev.startEngine();
+                if (started) {
+                    result = "🔥 MOTOR ENCENDIDO\n" + ev.getBrand() + " " + ev.getModel() + " listo para conducir";
+                } else {
+                    result = "❌ No se pudo encender el motor (batería baja o ya encendido)";
+                }
             }
         } else if (vehicle instanceof Hybrid_Vehicle) {
             Hybrid_Vehicle hv = (Hybrid_Vehicle) vehicle;
@@ -508,6 +544,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         updateDisplays(); // Asegura que el botón se actualice tras el cambio de estado
     }
 
+    // Método para activar/desactivar piloto automático
     private void toggleAutopilot() {
         if (vehicle instanceof Autonomous) {
             String result = ((Autonomous) vehicle).autoPilot();
@@ -524,6 +561,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
     }
 
+// Método para activar/desactivar modo de emergencia
     private void toggleEmergency() {
         if (vehicle instanceof Autonomous_Advanced) {
             Electric_Vehicle ev = (Electric_Vehicle) vehicle;
@@ -544,18 +582,19 @@ public class DriveSimulationDialog extends Dialog<Void> {
     }
 
 
-// Metodo para carga rapida
+    // Metodo para carga rapida
     private void fastCharge() {
         if (vehicle instanceof Electric_Vehicle) {
             String result = ((Electric_Vehicle) vehicle).startFastCharging();
             appendToStatus(result);
-        }else if (vehicle instanceof Hybrid_Vehicle) {
+        } else if (vehicle instanceof Hybrid_Vehicle) {
             String result = ((Hybrid_Vehicle) vehicle).startFastCharging();
             appendToStatus(result);
 
         }
     }
 
+   // Metodo para recargar batería
     private void refuel() {
         String result = "";
         if (vehicle instanceof Combustion_Vehicle) {
@@ -574,6 +613,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         appendToStatus(result);
     }
 
+ // Método para cambiar modo de operación en híbridos
     private void changeMode() {
         if (vehicle instanceof Hybrid_Vehicle) {
             String result = ((Hybrid_Vehicle) vehicle).change_operating_mode();
@@ -581,6 +621,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
     }
 
+    // Método para agregar texto al panel de estado con timestamp
     private void appendToStatus(String text) {
         String currentText = statusLabel.getText();
         String newText = java.time.LocalTime.now().toString().substring(0, 8) + " - " + text + "\n" + currentText;
@@ -598,6 +639,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         statusLabel.setText(newText);
     }
 
+    // Obtener tipo de vehículo como cadena
     private String getVehicleTypeString() {
         if (vehicle instanceof Electric_Vehicle) return "Vehículo Eléctrico";
         if (vehicle instanceof Hybrid_Vehicle) return "Vehículo Híbrido";
@@ -605,6 +647,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         return "Vehículo";
     }
 
+    // Obtener capacidades del vehículo como cadena
     private String getCapabilitiesString() {
         StringBuilder capabilities = new StringBuilder();
         capabilities.append("Conducible");
@@ -619,8 +662,7 @@ public class DriveSimulationDialog extends Dialog<Void> {
         return capabilities.toString();
     }
 
-
-
+// Método para cargar batería
     private void chargeBattery() {
         String result = "";
         if (vehicle instanceof Electric_Vehicle) {
@@ -638,7 +680,6 @@ public class DriveSimulationDialog extends Dialog<Void> {
         }
         appendToStatus(result);
     }
-
 
 
 }
