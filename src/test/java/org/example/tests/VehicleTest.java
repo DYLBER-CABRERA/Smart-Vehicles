@@ -32,7 +32,7 @@ public class VehicleTest {
         // Crea una instancia de vehículo de combustion con carga completa
         Combustion_Vehicle cv = new Combustion_Vehicle("456DEF", "Toyota", "Prius", 2021, 180, 40);
 
-        // Llama al método refuel() para intentar recargar la batería
+        // Llama al método bunker() para intentar recargar la batería
         cv.bunker();
 
         // Verifica que el tanque esté lleno
